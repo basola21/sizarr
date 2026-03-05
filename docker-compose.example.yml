@@ -1,0 +1,24 @@
+services:
+  sizarr:
+    image: sizarr:latest
+    container_name: sizarr
+    restart: unless-stopped
+    environment:
+      - SONARR_URL=http://sonarr:8989
+      - SONARR_API_KEY=your_sonarr_api_key
+      - RADARR_URL=http://radarr:7878
+      - RADARR_API_KEY=your_radarr_api_key
+      - CACHE_PATH=/cache
+      - SCHEDULE=0 2 * * *   # 2am daily
+      - CPU_THREADS=2        # ffmpeg threads
+      - CRF=20               # quality (lower = better, 18-24 recommended)
+      - PRESET=slow          # encoding speed (slow = better compression)
+    volumes:
+      - /data:/data
+      - /transcode_cache:/cache
+    networks:
+      - servarrnetwork
+
+networks:
+  servarrnetwork:
+    external: true
