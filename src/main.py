@@ -21,8 +21,8 @@ def run() -> None:
     logger.info(f"Found {len(files)} files to check")
 
     transcoded = 0
-    for path in files:
-        if transcode(path):
+    for path, codec in files:
+        if transcode(path, codec):
             transcoded += 1
 
     logger.info(f"Run complete. Transcoded {transcoded}/{len(files)} files.")

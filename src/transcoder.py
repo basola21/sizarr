@@ -8,7 +8,7 @@ import config
 
 logger = logging.getLogger(__name__)
 
-SKIP_CODECS = {"hevc", "av1", "vp9"}
+SKIP_CODECS = {"hevc", "x265", "av1", "vp9"}
 
 
 def get_video_codec(path: str) -> str:
@@ -26,19 +26,19 @@ def get_video_codec(path: str) -> str:
     return ""
 
 
-def transcode(path: str) -> bool:
-    codec = get_video_codec(path)
-    if not codec:
+def transcode(path: str, codec: str = "") -> bool:
+    resolved_codec = codec.lower() if codec else get_video_codec(path)
+    if not resolved_codec:
         return False
 
-    if codec in SKIP_CODECS:
-        logger.info(f"Skipping {path} (already {codec})")
+    if resolved_codec in SKIP_CODECS:
+        logger.info(f"Skipping {path} (already {resolved_codec})")
         return False
 
     input_path = Path(path)
     cache_file = Path(config.CACHE_PATH) / input_path.name
 
-    logger.info(f"Transcoding {path} ({codec} → h265)...")
+    logger.info(f"Transcoding {path} ({resolved_codec} → h265)...")
 
     result = subprocess.run([
         "ffmpeg", "-i", str(input_path),
