@@ -1,6 +1,8 @@
-FROM python:3.12-alpine
+FROM python:3.12-slim
 
-RUN apk add --no-cache ffmpeg
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 

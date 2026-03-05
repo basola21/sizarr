@@ -4,6 +4,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 
 import config
+import db
 from radarr import get_movie_files
 from sonarr import get_episode_files
 from transcoder import transcode
@@ -22,7 +23,11 @@ def run() -> None:
 
     transcoded = 0
     for path, codec in files:
+        if db.is_transcoded(path):
+            logger.info(f"Already transcoded, skipping: {path}")
+            continue
         if transcode(path, codec):
+            db.mark_transcoded(path)
             transcoded += 1
 
     logger.info(f"Run complete. Transcoded {transcoded}/{len(files)} files.")
