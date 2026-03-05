@@ -20,3 +20,4 @@ SCHEDULE = os.environ.get("SCHEDULE", "0 2 * * *")  # 2am daily by default
 CPU_THREADS = int(os.environ.get("CPU_THREADS", "2"))
 CRF = int(os.environ.get("CRF", "20"))
 PRESET = os.environ.get("PRESET", "slow")
+USE_GPU = os.environ.get("USE_GPU", "false").lower() == "true"

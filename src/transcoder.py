@@ -40,12 +40,14 @@ def transcode(path: str, codec: str = "") -> bool:
 
     logger.info(f"Transcoding {path} ({resolved_codec} → h265)...")
 
+    use_gpu = config.USE_GPU
+    video_codec = "hevc_nvenc" if use_gpu else "libx265"
+    extra_args = ["-rc", "vbr", "-cq", str(config.CRF)] if use_gpu else ["-crf", str(config.CRF), "-preset", config.PRESET, "-threads", str(config.CPU_THREADS)]
+
     result = subprocess.run([
         "ffmpeg", "-i", str(input_path),
-        "-c:v", "libx265",
-        "-crf", str(config.CRF),
-        "-preset", config.PRESET,
-        "-threads", str(config.CPU_THREADS),
+        "-c:v", video_codec,
+        *extra_args,
         "-c:a", "copy",
         "-c:s", "copy",
         "-y", str(cache_file),
