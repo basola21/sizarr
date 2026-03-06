@@ -10,9 +10,12 @@ services:
       - RADARR_API_KEY=your_radarr_api_key
       - CACHE_PATH=/cache
       - SCHEDULE=0 2 * * *   # 2am daily
-      - CPU_THREADS=2        # ffmpeg threads
-      - CRF=20               # quality (lower = better, 18-24 recommended)
-      - PRESET=slow          # encoding speed (slow = better compression)
+      - USE_GPU=false        # set true to use NVIDIA GPU (hevc_nvenc)
+      - GPU_CQ=26            # GPU quality (lower = better); 24-28 recommended
+      - GPU_PRESET=p4        # GPU speed preset: p1 (fastest) – p7 (slowest/best compression)
+      - CPU_THREADS=2        # CPU ffmpeg threads (ignored when USE_GPU=true)
+      - CRF=22               # CPU quality (lower = better, 20-26 recommended)
+      - PRESET=slow          # CPU encoding speed (slow = better compression)
     volumes:
       - /data:/data
       - /transcode_cache:/cache
