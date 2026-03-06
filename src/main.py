@@ -26,8 +26,9 @@ def run() -> None:
         if db.is_transcoded(path):
             logger.info(f"Already transcoded, skipping: {path}")
             continue
-        if transcode(path, codec):
-            db.mark_transcoded(path)
+        result = transcode(path, codec)
+        if result is not None:
+            db.mark_transcoded(path, **result)
             transcoded += 1
 
     logger.info(f"Run complete. Transcoded {transcoded}/{len(files)} files.")
